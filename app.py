@@ -64,5 +64,23 @@ def add_user():
     # Render the add user form
     return render_template('add_user.html')
 
+@app.route('/list_deleted_users')
+def list_deleted_users():
+    deleted_users = [user for user in users_data if user['deleted']]
+    return render_template('deleted_users.html', users=deleted_users)
+
+@app.route('/users/<int:user_id>/delete_permanently', methods=['POST'])
+def delete_user_permanently(user_id):
+    user_index = None
+    for index, user in enumerate(users_data):
+        if user['id'] == user_id and user['deleted']:
+            user_index = index
+            break
+
+    if user_index is not None:
+        del users_data[user_index]
+
+    return redirect('/list_deleted_users')
+
 if __name__ == '__main__':
     app.run(debug=True)

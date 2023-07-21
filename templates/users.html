@@ -10,6 +10,9 @@
         <div class="container">
             <h1 class="title">Users Management</h1>
             <a class="button is-primary" href="{{ url_for('add_user') }}">Add User</a>
+            </a>
+            <!-- Add button to list deleted users -->
+            <a class="button is-info" href="{{ url_for('list_deleted_users') }}">View Deleted Users</a>
             <table class="table is-fullwidth">
                 <thead>
                     <tr>
@@ -21,16 +24,22 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
-                        <tr>
+                        <tr {% if user.deleted %}style="text-decoration: line-through;"{% endif %}>
                             <td>{{ user.id }}</td>
                             <td>{{ user.name }}</td>
                             <td>{{ user.email }}</td>
                             <td>
                                 <div class="buttons">
                                     <a class="button is-small is-info" href="/users/{{ user.id }}/edit">Edit</a>
-                                    <form method="post" action="/users/{{ user.id }}/delete" style="display: inline;">
-                                        <button type="submit" class="button is-small is-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
-                                    </form>
+                                    {% if user.deleted %}
+                                        <form method="post" action="/users/{{ user.id }}/restore" style="display: inline;">
+                                            <button type="submit" class="button is-small is-success" onclick="return confirm('Are you sure you want to restore this user?')">Restore User</button>
+                                        </form>
+                                    {% else %}
+                                        <form method="post" action="/users/{{ user.id }}/delete" style="display: inline;">
+                                            <button type="submit" class="button is-small is-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                                        </form>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
