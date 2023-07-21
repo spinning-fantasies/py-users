@@ -13,10 +13,6 @@ def get_user_by_id(user_id):
     return next((user for user in users_data if user['id'] == user_id), None)
 
 @app.route('/')
-def index():
-    return "Welcome to the Users Management Back Office Application!"
-
-@app.route('/users')
 def users():
     # Only show non-deleted users
     active_users = [user for user in users_data if not user['deleted']]
