@@ -82,5 +82,19 @@ def delete_user_permanently(user_id):
 
     return redirect('/list_deleted_users')
 
+@app.route('/users/<int:user_id>/restore', methods=['POST'])
+def restore_deleted_user(user_id):
+    user_index = None
+    for index, user in enumerate(users_data):
+        if user['id'] == user_id and user['deleted']:
+            user_index = index
+            break
+
+    if user_index is not None:
+        users_data[user_index]['deleted'] = False
+
+    return redirect('/list_deleted_users')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
